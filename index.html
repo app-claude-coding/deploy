@@ -3,463 +3,335 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>StealthAI | Secure Private AI Infrastructure</title>
-    <!-- Fonts & Icons -->
+    <title>Nebula AI · Augmented Intelligence Platform</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #ffffff; color: #111827; line-height: 1.5; scroll-behavior: smooth; opacity: 0; transition: opacity 0.3s ease; }
+        body.loaded { opacity: 1; }
 
-        body {
-            font-family: 'Inter', sans-serif;
-            background: #ffffff;
-            color: #1a1e2b;
-            line-height: 1.5;
-            scroll-behavior: smooth;
-        }
+        .preloader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #ffffff; display: flex; align-items: center; justify-content: center; z-index: 9999; transition: opacity 0.3s ease; }
+        .preloader.hidden { opacity: 0; pointer-events: none; }
+        .preloader-spinner { width: 44px; height: 44px; border: 3px solid #fef3c7; border-top-color: #f97316; border-radius: 50%; animation: spin 0.6s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
 
         :root {
-            --slate: #1e293b;
-            --slate-light: #334155;
-            --emerald: #059669;
-            --emerald-dark: #047857;
-            --gray-bg: #f8fafc;
-            --border-light: #e2e8f0;
-            --shadow-card: 0 8px 20px rgba(0, 0, 0, 0.02), 0 2px 4px rgba(0, 0, 0, 0.03);
-            --radius: 20px;
+            --peach: #f97316;
+            --peach-dark: #ea580c;
+            --peach-soft: #fed7aa;
+            --peach-bg: #fff7ed;
+            --peach-muted: #ffedd5;
+            --border: #e5e7eb;
+            --text-muted: #6b7280;
+            --radius: 28px;
+            --radius-sm: 18px;
         }
+        .container { max-width: 1280px; margin: 0 auto; padding: 0 32px; }
+        
+        .navbar { background: rgba(255,255,255,0.96); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; }
+        .nav-wrapper { display: flex; justify-content: space-between; align-items: center; padding: 1rem 0; flex-wrap: wrap; gap: 1rem; }
+        .logo { font-size: 1.6rem; font-weight: 700; color: #111827; }
+        .logo span { color: var(--peach); }
+        .nav-links { display: flex; gap: 2rem; align-items: center; flex-wrap: wrap; }
+        .nav-links a { text-decoration: none; font-weight: 500; color: #4b5563; transition: 0.2s; }
+        .nav-links a:hover { color: var(--peach); }
+        .btn-primary { background: var(--peach); padding: 0.6rem 1.5rem; border-radius: 100px; color: white; font-weight: 600; text-decoration: none; transition: 0.2s; display: inline-block; }
+        .btn-primary:hover { background: var(--peach-dark); transform: translateY(-2px); }
+        .btn-outline { border: 1px solid var(--border); padding: 0.6rem 1.5rem; border-radius: 100px; background: white; font-weight: 500; text-decoration: none; color: #111827; display: inline-block; }
+        .btn-outline:hover { border-color: var(--peach); background: var(--peach-bg); }
 
-        .container {
-            max-width: 1280px;
-            margin: 0 auto;
-            padding: 0 32px;
-        }
+        /* Hero with video preview */
+        .hero { padding: 4rem 0 5rem; background: linear-gradient(125deg, var(--peach-bg) 0%, #ffffff 65%); }
+        .hero-grid { display: flex; flex-wrap: wrap; align-items: center; gap: 3rem; }
+        .hero-content { flex: 1; }
+        .hero-badge { background: var(--peach-soft); color: var(--peach-dark); border-radius: 100px; padding: 0.25rem 1rem; font-size: 0.75rem; font-weight: 600; display: inline-block; margin-bottom: 1rem; }
+        .hero-content h1 { font-size: 3.2rem; font-weight: 700; line-height: 1.2; margin-bottom: 1rem; }
+        .hero-highlight { color: var(--peach); }
+        .hero-content p { font-size: 1.1rem; color: var(--text-muted); max-width: 90%; margin-bottom: 2rem; }
+        .hero-video { flex: 1; text-align: center; }
+        .video-placeholder { background: #1e293b; border-radius: var(--radius); padding: 4rem 2rem; text-align: center; color: white; cursor: pointer; transition: 0.2s; }
+        .video-placeholder:hover { background: var(--peach-dark); }
+        .video-placeholder i { font-size: 3rem; margin-bottom: 1rem; display: block; }
 
-        /* Navigation */
-        .navbar {
-            background: rgba(255, 255, 255, 0.96);
-            backdrop-filter: blur(8px);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            border-bottom: 1px solid var(--border-light);
-        }
+        /* Tabs section */
+        .tabs-section { padding: 5rem 0; }
+        .tabs-header { display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center; margin-bottom: 3rem; border-bottom: 1px solid var(--border); padding-bottom: 1rem; }
+        .tab-btn { background: none; border: none; padding: 0.75rem 1.5rem; font-size: 1rem; font-weight: 500; cursor: pointer; border-radius: 100px; transition: 0.2s; color: var(--text-muted); }
+        .tab-btn:hover { color: var(--peach); background: var(--peach-bg); }
+        .tab-btn.active { background: var(--peach); color: white; }
+        .tab-content { display: none; text-align: center; padding: 2rem; background: var(--peach-bg); border-radius: var(--radius); }
+        .tab-content.active { display: block; }
+        .tab-content i { font-size: 3rem; color: var(--peach); margin-bottom: 1rem; }
+        .tab-content h3 { font-size: 1.5rem; margin-bottom: 1rem; }
 
-        .nav-wrapper {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1rem 0;
-            flex-wrap: wrap;
-        }
+        /* Partners grid */
+        .partners { padding: 4rem 0; background: #f9fafb; }
+        .partners-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 2rem; align-items: center; text-align: center; }
+        .partner-item { background: white; padding: 1.5rem; border-radius: var(--radius-sm); border: 1px solid var(--border); transition: 0.2s; }
+        .partner-item:hover { transform: translateY(-3px); border-color: var(--peach-soft); }
+        .partner-item i { font-size: 2rem; color: var(--peach); margin-bottom: 0.5rem; display: block; }
+        .partner-item span { font-weight: 500; }
 
-        .logo {
-            font-size: 1.8rem;
-            font-weight: 800;
-            color: var(--slate);
-            letter-spacing: -0.02em;
-        }
+        /* Video case + testimonial */
+        .video-case { padding: 5rem 0; }
+        .case-wrapper { display: flex; flex-wrap: wrap; gap: 3rem; align-items: center; }
+        .case-video { flex: 1; background: #1e293b; border-radius: var(--radius); padding: 3rem; text-align: center; color: white; cursor: pointer; }
+        .case-video i { font-size: 2.5rem; margin-bottom: 1rem; display: block; }
+        .case-quote { flex: 1; background: var(--peach-bg); padding: 2rem; border-radius: var(--radius); border-left: 4px solid var(--peach); }
+        .case-quote i { font-size: 2rem; color: var(--peach); margin-bottom: 1rem; display: block; }
 
-        .logo span {
-            color: var(--emerald);
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 2rem;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-
-        .nav-links a {
-            text-decoration: none;
-            font-weight: 500;
-            color: var(--slate-light);
-            transition: 0.2s;
-        }
-
-        .nav-links a:hover {
-            color: var(--emerald);
-        }
-
-        .btn-outline-emerald {
-            border: 1px solid var(--emerald);
-            padding: 0.5rem 1.4rem;
-            border-radius: 40px;
-            background: transparent;
-            font-weight: 600;
-            color: var(--emerald);
-            transition: 0.2s;
-        }
-
-        .btn-outline-emerald:hover {
-            background: var(--emerald);
-            color: white;
-        }
-
-        /* Hero */
-        .hero {
-            padding: 5rem 0 6rem;
-            background: linear-gradient(110deg, #ffffff 0%, #f1f5f9 100%);
-        }
-
-        .hero-grid {
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            gap: 3rem;
-        }
-
-        .hero-content {
-            flex: 1;
-        }
-
-        .hero-badge {
-            background: #ecfdf5;
-            color: var(--emerald);
-            border-radius: 100px;
-            padding: 0.3rem 1rem;
-            display: inline-block;
-            font-weight: 600;
-            font-size: 0.8rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .hero-content h1 {
-            font-size: 3.5rem;
-            font-weight: 800;
-            line-height: 1.2;
-            letter-spacing: -0.02em;
-            color: var(--slate);
-            margin-bottom: 1.2rem;
-        }
-
-        .hero-content p {
-            font-size: 1.2rem;
-            color: #475569;
-            max-width: 90%;
-            margin-bottom: 2rem;
-        }
-
-        .hero-stats {
-            display: flex;
-            gap: 2rem;
-            margin-top: 2rem;
-        }
-
-        .stat-item h3 {
-            font-size: 1.8rem;
-            font-weight: 800;
-            color: var(--emerald);
-        }
-
-        .hero-image {
-            flex: 1;
-            text-align: center;
-        }
-
-        .hero-image img {
-            max-width: 100%;
-            border-radius: 28px;
-            box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.08);
-        }
-
-        section {
-            padding: 5rem 0;
-        }
-
-        .section-title {
-            font-size: 2.2rem;
-            font-weight: 700;
-            text-align: center;
-            margin-bottom: 3rem;
-            color: var(--slate);
-        }
-
-        /* Cards */
-        .cards-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 2rem;
-        }
-
-        .card {
-            background: white;
-            border-radius: var(--radius);
-            padding: 2rem 1.8rem;
-            box-shadow: var(--shadow-card);
-            border: 1px solid var(--border-light);
-            transition: all 0.25s;
-        }
-
-        .card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 20px 30px -12px rgba(0, 0, 0, 0.08);
-            border-color: var(--emerald);
-        }
-
-        .card-icon {
-            font-size: 2.3rem;
-            color: var(--emerald);
-            margin-bottom: 1.2rem;
-        }
-
-        /* Use cases row */
-        .use-row {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 2rem;
-            background: var(--gray-bg);
-            border-radius: 32px;
-            padding: 2.5rem;
-            align-items: center;
-        }
+        /* Blog horizontal scroll */
+        .blog-scroll { padding: 5rem 0; background: var(--peach-bg); }
+        .scroll-container { display: flex; gap: 1.5rem; overflow-x: auto; padding-bottom: 1rem; }
+        .scroll-card { min-width: 300px; background: white; border-radius: var(--radius-sm); padding: 1.5rem; border: 1px solid var(--border); }
+        .scroll-card .date { font-size: 0.7rem; color: var(--peach); text-transform: uppercase; }
+        .scroll-card h3 { margin: 0.5rem 0; font-size: 1.1rem; }
+        .scroll-card .author { font-size: 0.8rem; color: var(--text-muted); margin-top: 1rem; }
 
         /* Pricing */
-        .pricing-grid {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 2rem;
-            justify-content: center;
-        }
+        .pricing { padding: 5rem 0; }
+        .pricing-grid { display: flex; flex-wrap: wrap; gap: 2rem; justify-content: center; }
+        .pricing-card { background: white; border-radius: var(--radius); flex: 1; min-width: 280px; padding: 2rem; border: 1px solid var(--border); text-align: center; transition: 0.2s; }
+        .pricing-card:hover { transform: translateY(-5px); }
+        .pricing-card.featured { border-top: 3px solid var(--peach); box-shadow: 0 8px 20px rgba(0,0,0,0.05); }
+        .price { font-size: 2.8rem; font-weight: 800; color: var(--peach); margin: 1rem 0; }
+        .price span { font-size: 0.9rem; font-weight: 400; color: var(--text-muted); }
+        .price-sub { font-size: 0.7rem; color: var(--text-muted); margin-top: -0.5rem; margin-bottom: 1rem; }
 
-        .price-card {
-            background: white;
-            border-radius: 28px;
-            flex: 1;
-            min-width: 260px;
-            padding: 2rem;
-            border: 1px solid var(--border-light);
-            transition: 0.2s;
-        }
+        /* Privacy */
+        .privacy-block { background: white; border-radius: var(--radius-sm); padding: 2rem; margin: 2rem 0; border: 1px solid var(--border); scroll-margin-top: 80px; }
+        .privacy-block h2, .privacy-block h3 { margin-top: 1.5rem; margin-bottom: 0.75rem; }
+        .privacy-block h2:first-child { margin-top: 0; }
+        .privacy-block p, .privacy-block li { color: var(--text-muted); font-size: 0.9rem; }
 
-        .price-card.featured {
-            border-top: 4px solid var(--emerald);
-            box-shadow: 0 12px 24px -12px rgba(5, 150, 105, 0.15);
-            transform: scale(1.02);
-        }
+        /* Footer with newsletter */
+        footer { background: #0f172a; color: #94a3b8; padding: 3rem 0 2rem; }
+        .footer-newsletter { text-align: center; max-width: 500px; margin: 0 auto 2rem; }
+        .footer-newsletter h3 { color: white; margin-bottom: 0.5rem; }
+        .newsletter-form { display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center; margin-top: 1rem; }
+        .newsletter-form input { padding: 0.75rem 1rem; border-radius: 100px; border: none; width: 260px; }
+        .footer-links { display: flex; flex-wrap: wrap; justify-content: center; gap: 2rem; margin-bottom: 2rem; }
+        .footer-links a { color: #94a3b8; text-decoration: none; font-size: 0.85rem; }
+        .footer-links a:hover { color: var(--peach); }
+        .back-to-top { position: fixed; bottom: 2rem; right: 2rem; background: var(--peach); color: white; width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; text-decoration: none; transition: 0.2s; z-index: 99; }
+        .back-to-top:hover { background: var(--peach-dark); transform: translateY(-3px); }
 
-        .price {
-            font-size: 2.6rem;
-            font-weight: 800;
-            color: var(--emerald);
-            margin: 1rem 0;
-        }
-
-        .btn-primary {
-            background: var(--emerald);
-            padding: 0.8rem 2rem;
-            border-radius: 60px;
-            color: white;
-            font-weight: 600;
-            display: inline-block;
-            text-decoration: none;
-            transition: 0.2s;
-        }
-
-        .btn-primary:hover {
-            background: var(--emerald-dark);
-        }
-
-        .cta-section {
-            background: var(--slate);
-            border-radius: 40px;
-            color: white;
-            text-align: center;
-            padding: 3rem;
-        }
-
-        /* Privacy Section */
-        .privacy-card {
-            background: var(--gray-bg);
-            border-radius: 32px;
-            padding: 2.5rem;
-            margin: 2rem 0;
-            border: 1px solid var(--border-light);
-            scroll-margin-top: 90px;
-        }
-
-        .privacy-card h2, .privacy-card h3 {
-            color: var(--slate);
-            margin-top: 1.8rem;
-            font-weight: 700;
-        }
-
-        .privacy-card p, .privacy-card li {
-            color: #334155;
-        }
-
-        footer {
-            background: var(--slate);
-            color: #cbd5e1;
-            padding: 3rem 0 2rem;
-        }
-
-        .back-to-top {
-            position: fixed;
-            bottom: 2rem;
-            right: 2rem;
-            background: var(--emerald);
-            color: white;
-            width: 48px;
-            height: 48px;
-            border-radius: 30px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-decoration: none;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            transition: 0.2s;
-            z-index: 99;
-        }
-
-        @media (max-width: 800px) {
-            .hero-content h1 { font-size: 2.3rem; }
-            .nav-wrapper { flex-direction: column; gap: 1rem; }
-            .section-title { font-size: 1.8rem; }
+        @media (max-width: 768px) {
+            .container { padding: 0 20px; }
+            .hero-content h1 { font-size: 2.2rem; }
+            .nav-wrapper { flex-direction: column; }
         }
     </style>
 </head>
 <body>
 
+<div class="preloader" id="preloader"><div class="preloader-spinner"></div></div>
+
 <nav class="navbar">
     <div class="container nav-wrapper">
-        <div class="logo">Stealth<span>AI</span></div>
+        <div class="logo">Nebula<span>AI</span></div>
         <div class="nav-links">
             <a href="#home">Home</a>
-            <a href="#features">Features</a>
-            <a href="#solutions">Solutions</a>
+            <a href="#tabs">Features</a>
+            <a href="#blog">Read</a>
             <a href="#pricing">Pricing</a>
-            <a href="#privacy-policy">Privacy</a>
-            <a href="#" class="btn-outline-emerald"><i class="fas fa-shield-alt"></i> Get access</a>
+            <a href="#privacy">Legal</a>
+            <a href="#" class="btn-primary">Try free →</a>
         </div>
     </div>
 </nav>
 
 <main>
-    <!-- Hero -->
+    <!-- Hero with video preview -->
     <section id="home" class="hero">
         <div class="container hero-grid">
             <div class="hero-content">
-                <div class="hero-badge"><i class="fas fa-lock"></i> Zero-Trust AI Infrastructure</div>
-                <h1>Private, secure, sovereign artificial intelligence</h1>
-                <p>Deploy enterprise-grade AI that never exposes your data. On-prem, hybrid, or cloud — with end-to-end encryption and compliance.</p>
-                <a href="#" class="btn-primary"><i class="fas fa-arrow-right"></i> Request demo</a>
-                <div class="hero-stats">
-                    <div class="stat-item"><h3>100%</h3><span>data sovereignty</span></div>
-                    <div class="stat-item"><h3>SOC2</h3><span>Type II certified</span></div>
-                    <div class="stat-item"><h3>GDPR</h3><span>compliant</span></div>
+                <div class="hero-badge">Nebula Core v3.0</div>
+                <h1>Augmented <span class="hero-highlight">intelligence</span> for every team</h1>
+                <p>Nebula augments human decision‑making — not replaces it. Ask questions, get insights, and take action faster than ever.</p>
+                <a href="#" class="btn-primary">Get early access →</a>
+            </div>
+            <div class="hero-video">
+                <div class="video-placeholder" onclick="alert('Video demo would play here')">
+                    <i class="fas fa-play-circle"></i>
+                    <p>Watch demo (2 min)</p>
                 </div>
             </div>
-            <div class="hero-image">
-                <img src="https://placehold.co/600x500/E8F5E9/059669?text=Secure+AI+Infra&font=inter" alt="Secure AI Infrastructure">
+        </div>
+    </section>
+
+    <!-- Tabs section -->
+    <section id="tabs" class="tabs-section">
+        <div class="container">
+            <div class="tabs-header">
+                <button class="tab-btn active" data-tab="tab1">For analysts</button>
+                <button class="tab-btn" data-tab="tab2">For executives</button>
+                <button class="tab-btn" data-tab="tab3">For developers</button>
+            </div>
+            <div class="tab-content active" id="tab1">
+                <i class="fas fa-chart-line"></i>
+                <h3>Self‑service analytics</h3>
+                <p>Ask questions in plain English. Get charts, dashboards, and forecasts instantly — no SQL required.</p>
+                <a href="#" class="btn-outline" style="margin-top: 1rem; display: inline-block;">Learn more →</a>
+            </div>
+            <div class="tab-content" id="tab2">
+                <i class="fas fa-chart-pie"></i>
+                <h3>Executive dashboard</h3>
+                <p>Real‑time KPIs, anomaly alerts, and automated briefings delivered to your inbox daily.</p>
+                <a href="#" class="btn-outline" style="margin-top: 1rem; display: inline-block;">Learn more →</a>
+            </div>
+            <div class="tab-content" id="tab3">
+                <i class="fas fa-code"></i>
+                <h3>API‑first platform</h3>
+                <p>Embed Nebula into your apps. REST API, SDKs for Python/JS, and webhooks for real‑time events.</p>
+                <a href="#" class="btn-outline" style="margin-top: 1rem; display: inline-block;">View docs →</a>
             </div>
         </div>
     </section>
 
-    <!-- Features -->
-    <section id="features">
+    <!-- Partners grid -->
+    <div class="partners">
         <div class="container">
-            <h2 class="section-title">Built for privacy-first enterprises</h2>
-            <div class="cards-grid">
-                <div class="card"><div class="card-icon"><i class="fas fa-user-secret"></i></div><h3>Fully Homomorphic Encryption</h3><p>Run inference on encrypted data — model never sees raw inputs. Military-grade privacy.</p></div>
-                <div class="card"><div class="card-icon"><i class="fas fa-server"></i></div><h3>On-Prem Deployment</h3><p>Deploy inside your VPC or air-gapped environment. Complete control over infrastructure.</p></div>
-                <div class="card"><div class="card-icon"><i class="fas fa-file-signature"></i></div><h3>Auditable AI</h3><p>Every prediction is logged, signed, and immutable. Perfect for regulated industries.</p></div>
-                <div class="card"><div class="card-icon"><i class="fas fa-globe"></i></div><h3>Global Compliance</h3><p>GDPR, HIPAA, CCPA, FedRAMP — automated compliance guardrails built-in.</p></div>
+            <h2 style="text-align: center; font-size: 1.5rem; margin-bottom: 2rem;">Trusted by innovative teams</h2>
+            <div class="partners-grid">
+                <div class="partner-item"><i class="fab fa-google"></i><span>Google Cloud</span></div>
+                <div class="partner-item"><i class="fab fa-aws"></i><span>AWS</span></div>
+                <div class="partner-item"><i class="fab fa-microsoft"></i><span>Microsoft</span></div>
+                <div class="partner-item"><i class="fab fa-salesforce"></i><span>Salesforce</span></div>
+                <div class="partner-item"><i class="fab fa-snowflake"></i><span>Snowflake</span></div>
+                <div class="partner-item"><i class="fab fa-datadog"></i><span>Datadog</span></div>
             </div>
         </div>
-    </section>
+    </div>
 
-    <!-- Solutions -->
-    <section id="solutions">
+    <!-- Video case + testimonial -->
+    <div class="video-case">
         <div class="container">
-            <div class="use-row">
-                <div style="flex:1"><i class="fas fa-hospital" style="font-size: 2.5rem; color:#059669;"></i><h3 style="margin: 1rem 0 0.5rem;">Healthcare AI</h3><p>Diagnostic assistance, medical imaging — without exposing PHI.</p></div>
-                <div style="flex:1"><i class="fas fa-university" style="font-size: 2.5rem; color:#059669;"></i><h3 style="margin: 1rem 0 0.5rem;">Financial Services</h3><p>Fraud detection, credit scoring with zero data leakage.</p></div>
-                <div style="flex:1"><i class="fas fa-gavel" style="font-size: 2.5rem; color:#059669;"></i><h3 style="margin: 1rem 0 0.5rem;">Legal & Compliance</h3><p>Contract analysis, redaction — data never leaves your premises.</p></div>
+            <div class="case-wrapper">
+                <div class="case-video" onclick="alert('Case study video would play here')">
+                    <i class="fas fa-play-circle"></i>
+                    <p>Watch case study: Finance automation</p>
+                </div>
+                <div class="case-quote">
+                    <i class="fas fa-quote-left"></i>
+                    <p>"Nebula cut our monthly reporting time from 3 days to 45 minutes. The team now focuses on strategy, not spreadsheets."</p>
+                    <p style="margin-top: 1rem; font-weight: 600;">— Priya Sharma, CFO</p>
+                    <p style="font-size: 0.8rem;">Vantage Financial</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Blog horizontal scroll -->
+    <section id="blog" class="blog-scroll">
+        <div class="container">
+            <h2 style="font-size: 1.8rem; margin-bottom: 1.5rem;">From the Nebula team</h2>
+            <div class="scroll-container">
+                <div class="scroll-card"><div class="date">May 19, 2025</div><h3>How we built real‑time NLP on streaming data</h3><p>Technical deep‑dive into our query engine.</p><div class="author">— Dr. Alan Wu</div></div>
+                <div class="scroll-card"><div class="date">May 14, 2025</div><h3>Nebula achieves SOC2 Type II certification</h3><p>Enterprise security standards, verified.</p><div class="author">— Security team</div></div>
+                <div class="scroll-card"><div class="date">May 8, 2025</div><h3>New: Slack integration for instant answers</h3><p>Ask Nebula directly from your team channels.</p><div class="author">— Product team</div></div>
+                <div class="scroll-card"><div class="date">May 2, 2025</div><h3>Reducing query latency by 80%</h3><p>Optimization techniques we learned.</p><div class="author">— Engineering</div></div>
             </div>
         </div>
     </section>
 
     <!-- Pricing -->
-    <section id="pricing">
+    <section id="pricing" class="pricing">
         <div class="container">
-            <h2 class="section-title">Transparent pricing for private AI</h2>
+            <h2 style="font-size: 2rem; text-align: center; margin-bottom: 1rem;">Simple, transparent pricing</h2>
+            <p class="section-sub" style="text-align: center; margin-bottom: 2rem;">No hidden fees. Cancel anytime.</p>
             <div class="pricing-grid">
-                <div class="price-card"><h3>Starter</h3><div class="price">$299<span style="font-size:1rem;">/mo</span></div><p>Cloud private tenant, 50K API calls, basic encryption.</p><a href="#" class="btn-primary" style="margin-top:1.5rem; display:inline-block;">Start free trial</a></div>
-                <div class="price-card featured"><h3>Business <span style="background:#ecfdf5; font-size:0.7rem; padding:0.2rem 0.6rem; border-radius:40px;">⭐ Most popular</span></h3><div class="price">$999<span style="font-size:1rem;">/mo</span></div><p>Dedicated VPC, 500K calls, SOC2 compliance, priority support.</p><a href="#" class="btn-primary">Contact sales</a></div>
-                <div class="price-card"><h3>Enterprise</h3><div class="price">Custom</div><p>On-prem, air-gapped, unlimited scale, custom SLAs.</p><a href="#" class="btn-primary">Get quote</a></div>
+                <div class="pricing-card">
+                    <h3>Free</h3>
+                    <div class="price">$0<span>/month</span></div>
+                    <div class="price-sub">Forever free</div>
+                    <ul style="list-style: none; margin: 1rem 0;"><li style="padding: 0.3rem 0;">✓ 1K queries/month</li><li style="padding: 0.3rem 0;">✓ Basic insights</li><li style="padding: 0.3rem 0;">✓ Community support</li></ul>
+                    <a href="#" class="btn-outline">Get started</a>
+                </div>
+                <div class="pricing-card featured">
+                    <h3>Pro</h3>
+                    <div class="price">$49<span>/month</span></div>
+                    <div class="price-sub">billed monthly</div>
+                    <ul style="list-style: none; margin: 1rem 0;"><li style="padding: 0.3rem 0;">✓ 50K queries/month</li><li style="padding: 0.3rem 0;">✓ Advanced analytics</li><li style="padding: 0.3rem 0;">✓ Priority support</li><li style="padding: 0.3rem 0;">✓ API access</li></ul>
+                    <a href="#" class="btn-primary">Start trial</a>
+                </div>
+                <div class="pricing-card">
+                    <h3>Enterprise</h3>
+                    <div class="price">Custom</div>
+                    <div class="price-sub">Volume pricing</div>
+                    <ul style="list-style: none; margin: 1rem 0;"><li style="padding: 0.3rem 0;">✓ Unlimited queries</li><li style="padding: 0.3rem 0;">✓ On‑prem deployment</li><li style="padding: 0.3rem 0;">✓ Dedicated support</li><li style="padding: 0.3rem 0;">✓ SOC2 / HIPAA</li></ul>
+                    <a href="#" class="btn-outline">Contact sales</a>
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- CTA -->
-    <div class="container">
-        <div class="cta-section">
-            <h2 style="font-size: 2rem;">Keep your AI private. Keep it powerful.</h2>
-            <p style="margin: 1rem 0 2rem; opacity: 0.9;">Join 500+ enterprises that trust StealthAI for secure machine learning.</p>
-            <a href="#" class="btn-primary" style="background: white; color: #1e293b;"><i class="fas fa-lock"></i> Start secure trial</a>
-        </div>
-    </div>
-
-    <!-- Privacy Policy Section -->
-    <div class="container" id="privacy-policy">
-        <div class="privacy-card">
-            <h2 style="margin-top:0;"><i class="fas fa-file-contract" style="color:#059669;"></i> Privacy Policy</h2>
-            <p><strong>Last updated:</strong> May 2025 | StealthAI is committed to the highest standards of data protection and transparency.</p>
-            
-            <h3>1. Information we collect</h3>
-            <p>We collect business contact information (name, company, email, phone), billing details, and usage metadata (API volumes, performance metrics). We do NOT store or log your model inputs or outputs unless explicitly enabled for debugging.</p>
-            
-            <h3>2. How we use your information</h3>
-            <p>To provide and maintain our secure AI services, billing, account management, security monitoring, and compliance reporting. We never use your data for model training without written consent.</p>
-            
-            <h3>3. Data retention</h3>
-            <p>Customer account data retained while active. Usage logs anonymized after 30 days. You may request deletion at any time.</p>
-            
-            <h3>4. Third-party sharing</h3>
-            <p>We do not sell or rent personal data. Limited sharing with infrastructure providers (AWS, Azure) under strict data processing agreements. All data remains encrypted.</p>
-            
-            <h3>5. Your rights (GDPR/CCPA)</h3>
-            <p>Access, correction, deletion, restriction, portability. Email <strong>privacy@stealthai.com</strong>. You also have the right to lodge a complaint with a supervisory authority.</p>
-            
-            <h3>6. Security measures</h3>
-            <p>AES-256 encryption at rest, TLS 1.3 in transit, hardware security modules (HSMs), quarterly penetration tests, and zero-trust architecture.</p>
-            
-            <h3>7. Children's privacy</h3>
-            <p>StealthAI is for business use only and not intended for individuals under 18.</p>
-            
-            <h3>8. International data transfers</h3>
-            <p>We offer data residency options (US, EU, APAC). Standard Contractual Clauses govern cross-border transfers.</p>
-            
-            <h3>9. Policy changes & contact</h3>
-            <p>Material changes will be notified via email. Data Protection Officer: <strong>dpo@stealthai.com</strong>. Mailing address: 111 Secure Way, Suite 500, Austin, TX 78701.</p>
-            <p style="margin-top:1rem;"><i class="fas fa-shield-check" style="color:#059669;"></i> StealthAI — AI that respects your boundaries.</p>
+    <!-- Privacy -->
+    <div class="container" id="privacy">
+        <div class="privacy-block">
+            <h2><i class="fas fa-shield-alt" style="color: var(--peach);"></i> Privacy Policy</h2>
+            <p><strong>Effective:</strong> May 2025 | Nebula AI Inc.</p>
+            <h3>1. Information collection</h3><p>Account data, query logs, and usage patterns. Your business data is never used for training public models.</p>
+            <h3>2. Data usage</h3><p>To provide query services, improve accuracy, process payments, and ensure security. No selling.</p>
+            <h3>3. Your rights</h3><p>Access, correct, delete, export. Email privacy@nebula.ai</p>
+            <h3>4. Security</h3><p>AES‑256, TLS 1.3, regular audits.</p>
+            <p><strong>Contact:</strong> dpo@nebula.ai | Nebula AI, 101 Intelligence Way, San Francisco, CA 94105</p>
         </div>
     </div>
 </main>
 
+<!-- Footer with newsletter -->
 <footer>
     <div class="container">
-        <div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 2rem;">
-            <div><h3 style="color:white;">Stealth<span style="color:#059669;">AI</span></h3><p>Secure sovereign AI infrastructure</p><div style="margin-top:0.8rem;"><i class="fab fa-twitter"></i> <i class="fab fa-linkedin"></i> <i class="fab fa-github"></i> © 2025</div></div>
-            <div><h4>Product</h4><p>Private AI Cloud<br>On-Prem<br>Encryption Suite<br>Pricing</p></div>
-            <div><h4>Resources</h4><p>Documentation<br>Compliance<br>Status<br>Support</p></div>
-            <div><h4>Legal</h4><p><a href="#privacy-policy" style="color:#cbd5e1; text-decoration:none;">Privacy Policy</a><br>Terms of Service<br>DPA<br>Security Whitepaper</p></div>
+        <div class="footer-newsletter">
+            <h3>Stay ahead with Nebula</h3>
+            <p style="margin-bottom: 0.5rem;">Get product updates and AI insights</p>
+            <div class="newsletter-form">
+                <input type="email" placeholder="Your email">
+                <a href="#" class="btn-primary">Subscribe →</a>
+            </div>
         </div>
-        <div style="text-align: center; padding-top: 2rem; border-top: 1px solid #475569; margin-top: 2rem; font-size: 0.8rem;">
-            StealthAI — Zero-trust AI for the enterprise. All rights reserved.
+        <div class="footer-links">
+            <a href="#home">Home</a>
+            <a href="#tabs">Features</a>
+            <a href="#blog">Blog</a>
+            <a href="#pricing">Pricing</a>
+            <a href="#privacy">Privacy</a>
+            <a href="#">Terms</a>
+        </div>
+        <div class="footer-bottom" style="text-align: center; padding-top: 1.5rem; border-top: 1px solid #334155;">
+            <p style="font-size: 0.75rem;">© 2025 Nebula AI — Augmented intelligence for every team</p>
         </div>
     </div>
 </footer>
 
 <a href="#" class="back-to-top"><i class="fas fa-arrow-up"></i></a>
-<script src="protection.js"></script>
+
 <script>
+    window.addEventListener('load', function() {
+        const preloader = document.getElementById('preloader');
+        setTimeout(function() {
+            preloader.classList.add('hidden');
+            document.body.classList.add('loaded');
+            setTimeout(function() { preloader.style.display = 'none'; }, 300);
+        }, 800);
+    });
+
+    // Tabs functionality
+    const tabBtns = document.querySelectorAll('.tab-btn');
+    const tabContents = document.querySelectorAll('.tab-content');
+    tabBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const tabId = btn.dataset.tab;
+            tabBtns.forEach(b => b.classList.remove('active'));
+            tabContents.forEach(c => c.classList.remove('active'));
+            btn.classList.add('active');
+            document.getElementById(tabId).classList.add('active');
+        });
+    });
+
+    // Smooth scroll
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function(e) {
             const href = this.getAttribute('href');
@@ -472,6 +344,7 @@
         });
     });
 </script>
-    <script src="protection.js"></script>
+
+<script src="protection.js"></script>
 </body>
 </html>
